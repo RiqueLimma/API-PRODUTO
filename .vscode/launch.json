@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "PasswordGenerator",
+            "request": "launch",
+            "mainClass": "com.apiestoque.produto.util.PasswordGenerator",
+            "projectName": "produto"
+        },
+        {
+            "type": "java",
+            "name": "ProdutoApplication",
+            "request": "launch",
+            "mainClass": "com.apiestoque.produto.execution.ProdutoApplication",
+            "projectName": "produto"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ProdutoApplication<produto>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.apiestoque.produto.ProdutoApplication",
+            "projectName": "produto",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
