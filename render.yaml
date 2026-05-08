@@ -2,8 +2,6 @@ services:
   - type: web
     name: api-produto
     runtime: docker
-    buildCommand: "./mvnw clean package -DskipTests"
-    startCommand: "java -jar target/*.jar"
     plan: free
     envVars:
       - key: SPRING_PROFILES_ACTIVE
