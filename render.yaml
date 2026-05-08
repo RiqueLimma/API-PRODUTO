@@ -2,11 +2,17 @@ services:
   - type: web
     name: api-produto
     env: java
-    buildCommand: "cd PRODUTO && ./mvnw clean package -DskipTests"
-    startCommand: "cd PRODUTO && java -jar target/*.jar"
+    buildCommand: "./mvnw clean package -DskipTests"
+    startCommand: "java -jar target/*.jar"
     plan: free
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: PORT
         value: 8080
+      - key: DATABASE_URL
+        value: jdbc:postgresql://<host>:5432/<database>
+      - key: DATABASE_USERNAME
+        value: <usuario>
+      - key: DATABASE_PASSWORD
+        value: <senha>
