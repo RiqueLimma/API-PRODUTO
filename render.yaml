@@ -10,9 +10,9 @@ services:
         value: prod
       - key: PORT
         value: 8080
-      - key: DATABASE_URL
+      - key: DB_URL
         value: jdbc:postgresql://<host>:5432/<database>
-      - key: DATABASE_USERNAME
+      - key: DB_USER
         value: <usuario>
-      - key: DATABASE_PASSWORD
+      - key: DB_PASS
         value: <senha>
