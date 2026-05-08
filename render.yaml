@@ -1,7 +1,7 @@
 services:
   - type: web
     name: api-produto
-    runtime: java
+    runtime: docker
     buildCommand: "./mvnw clean package -DskipTests"
     startCommand: "java -jar target/*.jar"
     plan: free
