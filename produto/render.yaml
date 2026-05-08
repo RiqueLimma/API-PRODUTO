@@ -2,6 +2,11 @@ services:
   - type: web
     name: api-produto
     env: java
-    buildCommand: "./mvnw clean package -DskipTests"
-    startCommand: "java -jar target/*.jar"
+    buildCommand: "cd produto && ./mvnw clean package -DskipTests"
+    startCommand: "cd produto && java -jar target/*.jar"
     plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: PORT
+        value: 8080
