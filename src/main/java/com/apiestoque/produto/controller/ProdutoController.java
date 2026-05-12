@@ -23,6 +23,7 @@ public class ProdutoController {
 
     @PostMapping
     public Produto salvar(@RequestBody Produto produto) {
+        produto.setId(null); // força Hibernate a tratar como novo registro
         return service.salvar(produto);
     }
 
@@ -30,7 +31,6 @@ public class ProdutoController {
     public Produto atualizar(
             @PathVariable Long id,
             @RequestBody Produto produto) {
-
         return service.atualizar(id, produto);
     }
 

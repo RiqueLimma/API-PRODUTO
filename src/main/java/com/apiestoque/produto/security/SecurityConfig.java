@@ -1,14 +1,15 @@
 package com.apiestoque.produto.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
@@ -17,52 +18,39 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            // ❌ CSRF (API REST)
             .csrf(csrf -> csrf.disable())
-
-            // ❌ Autenticações padrão
             .httpBasic(httpBasic -> httpBasic.disable())
             .formLogin(form -> form.disable())
-
-            // ✅ API 100% STATELESS (JWT)
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-
-            // ✅ JWT FILTER
-            .addFilterBefore(
-                jwtAuthenticationFilter,
-                UsernamePasswordAuthenticationFilter.class
-            )
-
-            // ✅ AUTORIZAÇÕES
             .authorizeHttpRequests(auth -> auth
-
-                // 🔓 AUTH + SWAGGER (PÚBLICOS)
+                // Endpoints públicos
                 .requestMatchers(
-                    "/auth/**",
+                    "/auth/login",
+                    "/auth/register",
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html"
                 ).permitAll()
 
-                // 🔐 PRODUTOS - GET
-                .requestMatchers(HttpMethod.GET, "/produtos/**")
-                    .hasAnyRole("USER", "ADMIN")
+                // PRODUTOS - qualquer usuário autenticado pode acessar
+                .requestMatchers("/produtos/**").authenticated()
 
-                // 🔐 PRODUTOS - CRUD
-                .requestMatchers(HttpMethod.POST, "/produtos/**")
-                    .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/produtos/**")
-                    .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/produtos/**")
-                    .hasRole("ADMIN")
-
-                // 🔐 QUALQUER OUTRA ROTA
+                // Qualquer outra rota exige autenticação
                 .anyRequest().authenticated()
+            )
+            .addFilterBefore(
+                jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter.class
             );
 
         return http.build();

@@ -13,15 +13,19 @@ public class JwtService {
     private static final String SECRET_KEY =
             "chave-super-secreta-com-mais-de-32-caracteres";
 
-    public String gerarToken(String username, String role) {
-        return Jwts.builder()
-                .subject(username)
-                .claim("role", role)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
-                .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
-                .compact();
-    }
+public String gerarToken(String username, String role) {
+    return Jwts.builder()
+            .setSubject(username) // usuário
+            .claim("role", role)  // perfil/role
+            .setIssuedAt(new Date()) // data de emissão
+            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // expira em 1h
+            .signWith(
+                Keys.hmacShaKeyFor(SECRET_KEY.getBytes()),
+                io.jsonwebtoken.SignatureAlgorithm.HS256 // algoritmo padrão
+            )
+            .compact();
+}
+
 
     public String getUsername(String token) {
         return Jwts.parser()
